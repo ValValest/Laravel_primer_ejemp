@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Models\Chirp;
+use App\Models\User;
 
 //esta definición nos devuelve la vista welcome
 
@@ -32,7 +34,16 @@ Route::view('/', 'welcome')->name('welcome');
     })->name('chirps.index');
 
      Route::post('/chirps', function () {
-         return 'Processing Chirp...';
+         //guardando variable message para después insertarla en la bd
+        Chirp::create([
+            'message' => request('message'),
+            'user_id' => auth()->id(), 
+         ]);
+
+         //session()->flash('status','Chirp created successfully!');
+
+         return to_route('chirps.index')
+            ->with('status','Chirp created successfully!');
      });
  });
 
