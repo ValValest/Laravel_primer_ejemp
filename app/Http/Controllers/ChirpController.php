@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Chirp;
+use Illuminate\Auth\Events\Validated;
 use Illuminate\Http\Request;
 
 class ChirpController extends Controller
@@ -12,7 +13,9 @@ class ChirpController extends Controller
      */
     public function index()
     {
-        //
+        return view('chirps.index',[
+            'chirps' => Chirp::all()
+        ]);
     }
 
     /**
@@ -28,7 +31,16 @@ class ChirpController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'message' => ['required', 'min:3', 'max:255'],
+        ]);
+
+        $request->user()->chirps()->create($validated);
+
+         //session()->flash('status','Chirp created successfully!');
+
+         return to_route('chirps.index')
+            ->with('status','Chirp created successfully!');
     }
 
     /**

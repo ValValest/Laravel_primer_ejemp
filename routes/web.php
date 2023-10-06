@@ -1,9 +1,9 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ChirpController;
 use Illuminate\Support\Facades\Route;
-use App\Models\Chirp;
-use App\Models\User;
+
 
 //esta definición nos devuelve la vista welcome
 
@@ -29,22 +29,11 @@ Route::view('/', 'welcome')->name('welcome');
      Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
      Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-     Route::get('/chirps', function () {
-        return view('chirps.index');
-    })->name('chirps.index');
+     Route::get('/chirps', [ChirpController::class, 'index'])
+        ->name('chirps.index');
 
-     Route::post('/chirps', function () {
-         //guardando variable message para después insertarla en la bd
-        Chirp::create([
-            'message' => request('message'),
-            'user_id' => auth()->id(), 
-         ]);
-
-         //session()->flash('status','Chirp created successfully!');
-
-         return to_route('chirps.index')
-            ->with('status','Chirp created successfully!');
-     });
+     Route::post('/chirps', [ChirpController::class, 'store'])
+        ->name('chirps.store');
  });
 
 require __DIR__.'/auth.php';
