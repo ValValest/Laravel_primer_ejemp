@@ -4,6 +4,11 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ChirpController;
 use Illuminate\Support\Facades\Route;
 
+//escucharemos cada vez que se ejecute una consulta, para eso el dump
+// DB::listen(function ($query) {
+//     dump($query->sql);
+// });
+
 
 //esta definición nos devuelve la vista welcome
 
@@ -14,7 +19,7 @@ Route::view('/', 'welcome')->name('welcome');
 //  Route::put(); //actualiza recursos
 //  Route::delete(); //elimina recursos
 
- //REDIRECCIONA A CHIRPS 'welcome to our chirps page' CUANDO PONEMOS EL No.2, redirect 
+ //REDIRECCIONA A CHIRPS 'welcome to our chirps page' CUANDO PONEMOS EL No.2, redirect
  //SIGNO ?, NOS DA UN PARÁMETRO OPCIONAL, POR ESO AL EJECUTAR, NOS REEDIRECCIONA A /chirps, es la función que se ejecuta
  //->route('chirps.index') nombre de la ruta a la que queremos redireccionar
 // Route::get('/chirps/{chirp}', function ($chirp) {
@@ -34,6 +39,10 @@ Route::view('/', 'welcome')->name('welcome');
 
      Route::post('/chirps', [ChirpController::class, 'store'])
         ->name('chirps.store');
+    Route::get('/chirps/{chirp}/edit',[ChirpController::class,'edit'])
+        ->name('chirps.edit');
+    Route::put('/chirps/{chirp}', [ChirpController::class, 'update'])
+        ->name('chirps.update');
  });
 
 require __DIR__.'/auth.php';

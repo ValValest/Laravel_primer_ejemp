@@ -34,12 +34,34 @@
                     <div class="flex-1">
                         <div class="flex justify-between items-center">
                             <div>
-                                <span class="text-gray-800 dark:text-gray-200">USER_NAME</span>
-                                <small class="ml-2 text-sm text-gray-600 dark:text-gray-400">CREATED_AT</small>
+                                <span class="text-gray-800 dark:text-gray-200">
+                                    {{ $chirp->user->name }}
+                                </span>
+                                <small class="ml-2 text-sm text-gray-600 dark:text-gray-400">{{$chirp->created_at->format('j M Y, g:i a')}}</small>
+                                @unless($chirp->created_at->eq($chirp->update_at))
+                                    <small class="text-sm text-gray-600 dark:text-gray-400"> &middot; {{ __('edited') }}</small>
+                                @endunless <!--si la fecha de creación es diferente a la de actu. entonces aparece el edit-->
                             </div>
                         </div>
-                        <p class="mt-4 text-lg text-gray-900 dark:text-gray-100">MESSAGE</p>
+                        <p class="mt-4 text-lg text-gray-900 dark:text-gray-100">{{$chirp->message}}</p></p>
                     </div>
+                    @if (auth()->user()->id === $chirp->user_id)
+                    <x-dropdown>
+                        <x-slot name="trigger">
+                            <button>
+                                <svg class="w-5 h-5 text-gray-500 dark:text-gray-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"></path>
+                                </svg>
+                            </button>
+                        </x-slot>
+                        <x-slot name="content">
+                            <x-dropdown-link :href="route('chirps.edit', $chirp)">{{__('Edit Chirp')}}</x-dropdown-link>
+                        </x-slot>
+                        <!--<a href="{{route('chirps.edit', $chirp)}}">{{__('Edit_Chirp')}}</a>-->
+                    </x-dropdown>
+                    @endif
+
+                </div>
                 @endforeach
                 </div>
             </div>
